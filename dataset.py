@@ -85,5 +85,69 @@ class LearningToSeeInTheDarkDataset(Dataset):
     def __len__(self):
         return len(self.t_ids)
 
+class LearningToSeeInTheDarkDatasetTest(Dataset):
+
+    def __init__(self, t_ids, t_paths, gt_paths, patch_size=512, transforms=None):
+        self.t_ids = t_ids
+        self.t_paths = t_paths
+        self.gt_paths = gt_paths
+        
+        self.gt_images = [None] * 6000
+        self.t_images = {}
+        self.t_images['100'] = [None] * len(self.t_ids)
+        self.t_images['250'] = [None] * len(self.t_ids)
+        self.t_images['300'] = [None] * len(self.t_ids)
+        
+        self.patch_size = patch_size
+
+        self.transforms = transforms
+
+    def __getitem__(self, index):
+        
+        t_id = self.t_ids[index]
+        
+        t_files = glob.glob(self.t_paths + '%05d_00*.ARW'%t_id)
+        gt_files = glob.glob(self.gt_paths + '%05d_00*.ARW'%t_id)
+
+        # Only one ground truth image
+        gt_path = gt_files[0]
+        _, gt_fn = os.path.split(gt_path)
+        gt_exposure =  float(gt_fn[9:-5])
+        
+        gt_raw = rawpy.imread(gt_path)
+        im = gt_raw.postprocess(use_camera_wb=True, half_size=False, no_auto_bright=True, output_bps=16)
+        im = im[:1024, :1024]
+        gt_full = np.expand_dims(np.float32(im/65535.0),axis = 0)
+
+        # Multiple input images
+        t_full = []
+
+        for i in range( len(t_files) ):
+            
+            t_path = t_files[i]
+
+            _, t_fn = os.path.split(t_path)
+
+            t_exposure =  float(t_fn[9:-5])
+            
+            ratio = min(gt_exposure/t_exposure, 300)
+            
+            t_raw = rawpy.imread(t_path)
+            im = t_raw.raw_image_visible.astype(np.float32)
+            im = im[:1024, :1024]
+            input_full = np.expand_dims(pack_raw(im),axis=0) *ratio
+                
+            im = raw.postprocess(use_camera_wb=True, half_size=False, no_auto_bright=True, output_bps=16)
+            im = im[:1024, :1024]
+            scale_full = np.expand_dims(np.float32(im/65535.0),axis = 0)
+
+            input_full = np.minimum(input_full,1.0)
+
+            t_full[i] = (input_full, scale_full, ratio)
+
+        return t_id, t_full, gt_full
+        
+    def __len__(self):
+        return len(self.t_ids)
 
 
