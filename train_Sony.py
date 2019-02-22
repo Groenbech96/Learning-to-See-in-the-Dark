@@ -1,7 +1,7 @@
 # uniform content loss + adaptive threshold + per_class_input + recursive G
 # improvement upon cqf37
 from __future__ import division
-import os, time, scipy.io
+import os, time, scipy
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 import numpy as np
