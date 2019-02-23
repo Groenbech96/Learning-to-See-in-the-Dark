@@ -1,5 +1,6 @@
 from __future__ import division
 import os, sys, time, scipy.io
+from torch.utils.data import DataLoader
 import argparse
 import numpy as np
 import rawpy
@@ -35,7 +36,7 @@ print("Training Model...", file=sys.stderr, flush=True)
 # input_images['250'] = [None] * len(train_ids)
 # input_images['100'] = [None] * len(train_ids)
 
-# g_loss = torch.from_numpy(np.zeros((5000, 1))).float().to(device)
+#   
 
 # allfolders = glob.glob('./result/*0')
 # lastepoch = 0
@@ -155,7 +156,6 @@ def main():
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-
     args = parser.parse_args()
 
     t_file_names, t_ids = getInputImagesList()
@@ -165,11 +165,14 @@ def main():
                                             './dataset/sony/short/', 
                                             './dataset/sony/long/')
     
+    dataLoader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=4)
+
+
     learning_rate = 1e-4
 
-    model = Net()
+    model = Net().cuda()
     optimizer = optim.Adam(model.parameters(), lr = learning_rate)
-
+    
     if args.load:
         if os.path.isdir(args.load):
             name = ''
@@ -187,11 +190,12 @@ def main():
             else:
                 print("Epochs not specified", file=sys.stderr, flush=True)
 
-    if torch.cuda.device_count() > 1:
-        print("Running in parrallel: " + str(torch.cuda.device_count()) + "GPU's",file=sys.stderr, flush=True )
-        model = nn.DataParallel(model)
+    #if torch.cuda.device_count() > 1:
+    #    print("Running in parrallel: " + str(torch.cuda.device_count()) + " GPU's",file=sys.stderr, flush=True )
+    #    model = nn.DataParallel(model,  device_ids=[0, 1]).cuda()
 
     model.to(device)
+
     st = time.time()
 
     for epoch in range(start_epoch , 4001):
@@ -200,13 +204,21 @@ def main():
             for g in optimizer.param_groups:
                 g['lr'] = 1e-5
         
-        losses = []
-        for index in np.random.permutation(len(t_ids)):
+        g_loss = torch.from_numpy(np.zeros((5000, 1))).float().to(device)
+
+        for t_id, t_patch, gt_patch in dataLoader:
             
-            t_patch, gt_patch = dataset[index]
+        #for index in np.random.permutation(len(t_ids)):
+            #t_id, t_patch, gt_patch = dataset[index]
             
-            in_img = torch.from_numpy(t_patch).permute(0,3,1,2).to(device)
-            gt_img = torch.from_numpy(gt_patch).permute(0,3,1,2).to(device)
+            # Get the only element in the batch
+            t_patch = t_patch[0]
+            gt_patch = gt_patch[0]
+
+            in_img = t_patch.permute(0,3,1,2).to(device)
+            gt_img = gt_patch.permute(0,3,1,2).to(device)
+            #in_img = torch.from_numpy(t_patch).permute(0,3,1,2).to(device)
+            #gt_img = torch.from_numpy(gt_patch).permute(0,3,1,2).to(device)
 
             model.zero_grad()
             out_img = model(in_img)
@@ -215,11 +227,12 @@ def main():
             loss.backward()
 
             optimizer.step()
-            losses.append(loss.item())
+            g_loss[t_id] = loss.data
         
         with open(result_dir + 'log.txt', 'a+') as f:
-            f.write("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(losses), time.time() - st))
-            
+            f.write("%d Items=%d Mean Loss=%.3f Time=%.3f \n" % (epoch, len(g_loss), np.mean(g_loss[np.where(g_loss)]), time.time() - st))
+        
+        print("Starting training", file=sys.stderr, flush=True)
         if epoch % save_freq == 0:
             # create dir
             if not os.path.isdir(result_dir + '%04d'%epoch):
@@ -229,7 +242,7 @@ def main():
                 output = np.minimum(np.maximum(output,0),1)
 
                 temp = np.concatenate((gt_patch[0,:,:,:], output[0,:,:,:]),axis=1)
-                scipy.misc.toimage(temp*255,  high=255, low=0, cmin=0, cmax=255).save(result_dir + '%04d/%05d_00_train_%d.jpg'%(epoch,train_id,ratio))
+                scipy.misc.toimage(temp*255,  high=255, low=0, cmin=0, cmax=255).save(result_dir + '%04d/%05d_00_train.jpg'%(epoch, t_id))
 
                 torch.save({
                         'model_state': model.state_dict(),
