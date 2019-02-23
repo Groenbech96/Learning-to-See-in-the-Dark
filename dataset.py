@@ -136,5 +136,3 @@ class LearningToSeeInTheDarkDataset(Dataset):
     def __len__(self):
         return len(self.t_ids)
 
-
-
