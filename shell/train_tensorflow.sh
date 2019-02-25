@@ -56,8 +56,7 @@ nvidia-smi
 
 /appl/cuda/9.2/samples/bin/x86_64/linux/release/deviceQuery
 
-# Go to root
-cd ..
+
 
 # Setup virtual env
 #
@@ -80,5 +79,6 @@ pip install -r requirements.txt
 #
 # Install basic python math
 #
+# Go to root
 
 python3 train_Sony.py
