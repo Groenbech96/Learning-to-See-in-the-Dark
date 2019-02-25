@@ -8,10 +8,10 @@ import numpy as np
 import rawpy
 import glob
 
-input_dir = './dataset/Sony/short/'
-gt_dir = './dataset/Sony/long/'
-checkpoint_dir = './checkpoint/Sony/'
-result_dir = './result_Sony/'
+input_dir = './dataset/sony/short/'
+gt_dir = './dataset/sony/long/'
+checkpoint_dir = './checkpoint/sony/'
+result_dir = './result/sony/'
 
 # get test IDs
 test_fns = glob.glob(gt_dir + '/1*.ARW')
@@ -117,7 +117,7 @@ for test_id in test_ids:
     for k in range(len(in_files)):
         in_path = in_files[k]
         in_fn = os.path.basename(in_path)
-        print(in_fn)
+        
         gt_files = glob.glob(gt_dir + '%05d_00*.ARW' % test_id)
         gt_path = gt_files[0]
         gt_fn = os.path.basename(gt_path)

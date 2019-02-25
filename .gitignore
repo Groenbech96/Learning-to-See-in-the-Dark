@@ -8,6 +8,7 @@ mlenv/
 .vscode/
 __pycache__/
 
+pytorch/models/
 
 
 .DS_Store

@@ -35,9 +35,6 @@
 # if you want to receive e-mail notifications on a non-default address
 ##BSUB -u s164440@student.dtu.dk
 
-### -- send notification at start --
-#BSUB -B
-
 ### -- send notification at completion--
 #BSUB -N
 
@@ -53,40 +50,35 @@ module unload python
 
 module load tensorflow/1.12-gpu-python-3.6.2
 module load numpy/1.13.1-python-3.6.2-openblas-0.2.20
-module load tensorflow
-
+#module load tensorflow
 
 nvidia-smi
-# Load the cuda module
-#module load cuda/9.2
-#module load cudnn/v7.4.2.24-prod-cuda-9.2
 
 /appl/cuda/9.2/samples/bin/x86_64/linux/release/deviceQuery
 
+# Go to root
+cd ..
 
 # Setup virtual env
 #
 export PYTHONPATH=
-python3 -m venv ML
-source ML/bin/activate
+python3 -m venv mlenv
+source mlenv/bin/activate
 
-#
+
+
 # Upgrade pip
-#
 pip3 install -U pip
 
+# install 
+pip install -r requirements.txt
 
 # Expand path
-export PATH="$HOME/bin:$PATH"
-export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
+#export PATH="$HOME/bin:$PATH"
+#export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
 
 #
 # Install basic python math
 #
-pip3 install -U numpy
-pip3 install -U scipy
-#pip3 install -U torch
-pip3 install -U pillow
-pip3 install -U rawpy
-pip3 install tensorflow-gpu
+
 python3 train_Sony.py

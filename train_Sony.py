@@ -8,10 +8,18 @@ import numpy as np
 import rawpy
 import glob
 
-input_dir = './dataset/Sony/short/'
-gt_dir = './dataset/Sony/long/'
-checkpoint_dir = './result_Sony/'
-result_dir = './result_Sony/'
+input_dir = './dataset/sony/short/'
+gt_dir = './dataset/sony/long/'
+checkpoint_dir = './checkpoint/sony/'
+result_dir = './result/sony/'
+
+# Create folders
+if not os.path.isdir(result_dir):
+    os.makedirs(result_dir)
+
+if not os.path.isdir(checkpoint_dir):
+    os.makedirs(checkpoint_dir)
+    
 
 # get train IDs
 train_fns = glob.glob(gt_dir + '0*.ARW')
@@ -112,9 +120,11 @@ G_opt = tf.train.AdamOptimizer(learning_rate=lr).minimize(G_loss)
 
 saver = tf.train.Saver()
 sess.run(tf.global_variables_initializer())
+
+
 ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
 if ckpt:
-    print('loaded ' + ckpt.model_checkpoint_path)
+    print('Loaded ' + ckpt.model_checkpoint_path)
     saver.restore(sess, ckpt.model_checkpoint_path)
 
 # Raw data takes long time to load. Keep them in memory after loaded.
@@ -126,15 +136,17 @@ input_images['100'] = [None] * len(train_ids)
 
 g_loss = np.zeros((5000, 1))
 
-allfolders = glob.glob('./result/*0')
+allfolders = glob.glob(result_dir + '*0')
 lastepoch = 0
 for folder in allfolders:
     lastepoch = np.maximum(lastepoch, int(folder[-4:]))
 
 learning_rate = 1e-4
 for epoch in range(lastepoch, 4001):
-    if os.path.isdir("result/%04d" % epoch):
+    
+    if os.path.isdir(result_dir + "%04d" % epoch):
         continue
+
     cnt = 0
     if epoch > 2000:
         learning_rate = 1e-5
@@ -190,7 +202,7 @@ for epoch in range(lastepoch, 4001):
         output = np.minimum(np.maximum(output, 0), 1)
         g_loss[ind] = G_current
 
-        print("%d %d Loss=%.3f Time=%.3f" % (epoch, cnt, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
+        #print("%d %d Loss=%.3f Time=%.3f" % (epoch, cnt, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
 
         if epoch % save_freq == 0:
             if not os.path.isdir(result_dir + '%04d' % epoch):
