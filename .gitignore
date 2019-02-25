@@ -4,7 +4,7 @@ result_Sony/
 result/
 seeinthedark/
 checkpoint/
-<<<<<<< HEAD
 mlenv/
-=======
->>>>>>> 3e68546e7eca0b9e5065f5f2d314c25c33e09245
+.vscode/
+__pycache__/
+
