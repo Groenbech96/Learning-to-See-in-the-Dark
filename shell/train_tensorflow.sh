@@ -46,28 +46,32 @@
 
 module unload cuda
 module unload cudann
-module unload python
+#module unload python
 
-module load tensorflow/1.12-gpu-python-3.6.2
-module load numpy/1.13.1-python-3.6.2-openblas-0.2.20
+module load cuda/9.0
+module load cudnn/v7.4.2.24-prod-cuda-9.0
+#module load python
+
+#module load tensorflow/1.12-gpu-python-3.6.2
+#@module load numpy/1.13.1-python-3.6.2-openblas-0.2.20
 #module load tensorflow
 
 nvidia-smi
 
 /appl/cuda/9.2/samples/bin/x86_64/linux/release/deviceQuery
 
-
-
 # Setup virtual env
 #
+
+pip install virtualenv
+
 export PYTHONPATH=
-python3 -m venv mlenv
+virtualenv mlenv
 source mlenv/bin/activate
 
 
-
 # Upgrade pip
-pip3 install -U pip
+pip install -U pip
 
 # install 
 pip install -r requirements.txt
@@ -81,4 +85,4 @@ pip install -r requirements.txt
 #
 # Go to root
 
-python3 train_Sony.py
+python train_sony.py

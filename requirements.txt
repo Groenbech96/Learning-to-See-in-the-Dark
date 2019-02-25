@@ -4,3 +4,4 @@ scipy==1.2.1
 rawpy
 torch==1.0.1.post2
 tensorflow-gpu
+
