@@ -197,7 +197,7 @@ for epoch in range(lastepoch, 4001):
         output = np.minimum(np.maximum(output, 0), 1)
         g_loss[ind] = G_current
 
-        print("%d %d Loss=%.3f Time=%.3f" % (epoch, cnt, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
+        #print("%d %d Loss=%.3f Time=%.3f" % (epoch, cnt, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
 
         if epoch % save_freq == 0:
             if not os.path.isdir(result_dir + '%04d' % epoch):

@@ -1,7 +1,6 @@
-numpy==1.16.1
-Pillow==5.4.1
-scipy==1.2.1
+numpy
+Pillow
+scipy
 rawpy
-torch==1.0.1.post2
+torch
 tensorflow-gpu
-
