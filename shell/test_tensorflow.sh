@@ -19,8 +19,6 @@
 ### Ask for a GPU with 32GB of memory
 #BSUB -R "select[gpu32gb]"
 
-### Ask for NVLINK - Meaning: 
-
 ### -- Select the resources: 1 gpu in exclusive proce   ss mode --
 #BSUB -gpu "num=1:mode=exclusive_process"
 
@@ -40,8 +38,8 @@
 
 ### -- Specify the output and error file. %J is the job-id --
 ### -- -o and -e mean append, -oo and -eo mean overwrite --
-#BSUB -o ./output/tensorflow/train/_%J.out
-#BSUB -e ./output/tensorflow/train/_%J.err
+#BSUB -o ./output/tensorflow/test/_%J.out
+#BSUB -e ./output/tensorflow/test/_%J.err
 # -- end of LSF options --
 
 module unload cuda
@@ -63,4 +61,4 @@ source mlpy2env/bin/activate
 # install 
 pip install -r requirements.txt
 
-python train_sony.py
+python test_sony.py

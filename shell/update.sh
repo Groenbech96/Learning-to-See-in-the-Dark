@@ -4,9 +4,10 @@ source mlpy2env/bin/activate
 pip install -r requirements.txt
 
 deactivate
+chmod -R 777 mlpy2env
 
 module unload python
-module load numpy/1.13.1-python-3.6.2-openblas-0.2.20
+module load python3/3.6.2
 
 source mlpy3env/bin/activate
 
@@ -14,3 +15,4 @@ source mlpy3env/bin/activate
 pip install -r requirements.txt
 
 deactivate
+chmod -R 777 mlpy3env

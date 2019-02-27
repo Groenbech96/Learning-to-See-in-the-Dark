@@ -22,11 +22,10 @@ chmod -R 777 mlpy2env
 module unload python
 module load python3/3.6.2
 
-#
+
 # Setup virtual env
-#
 export PYTHONPATH=
-python -m venv mlpy3env
+python3 -m venv mlpy3env
 source mlpy3env/bin/activate
 
 # Upgrade pip

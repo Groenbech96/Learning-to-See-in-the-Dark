@@ -105,7 +105,7 @@ saver = tf.train.Saver()
 sess.run(tf.global_variables_initializer())
 ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
 if ckpt:
-    print('loaded ' + ckpt.model_checkpoint_path)
+    print('Loaded ' + ckpt.model_checkpoint_path)
     saver.restore(sess, ckpt.model_checkpoint_path)
 
 if not os.path.isdir(result_dir + 'final/'):
