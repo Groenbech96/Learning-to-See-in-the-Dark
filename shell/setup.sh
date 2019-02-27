@@ -2,15 +2,15 @@
 
 # Start with python 2
 
-# Upgrade pip
-pip install -U pip
-
 # Setup virtual env
 pip install virtualenv
 
 export PYTHONPATH=
 virtualenv mlpy2env
 source mlpy2env/bin/activate
+
+# Upgrade pip
+pip install -U pip
 
 # install 
 pip install -r requirements.txt
@@ -27,7 +27,7 @@ chmod -R 777 mlpy2env
 # Setup virtual env
 #
 export PYTHONPATH=
-python3 -m venv mlpy3env
+python -m venv mlpy3env
 source mlpy3env/bin/activate
 
 # Upgrade pip
