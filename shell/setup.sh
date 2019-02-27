@@ -15,13 +15,12 @@ pip install -U pip
 # install 
 pip install -r requirements.txt
 
-module unload python
-module load numpy/1.13.1-python-3.6.2-openblas-0.2.20
-
 # stop virtual env
 deactivate
-
 chmod -R 777 mlpy2env
+
+module unload python
+module load python3/3.6.2
 
 #
 # Setup virtual env
