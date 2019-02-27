@@ -1,7 +1,8 @@
 venv/
 dataset/
-result_Sony/
 result/
+mlpy2env/
+mlpy3env/
 seeinthedark/
 checkpoint/
 mlenv/
