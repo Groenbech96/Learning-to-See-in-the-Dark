@@ -140,6 +140,7 @@ for folder in allfolders:
 
 with open('log.txt', 'r+') as f:
     f.write("New training")
+    print("New training")
 
 learning_rate = 1e-4
 for epoch in range(lastepoch, 4001):
@@ -210,5 +211,6 @@ for epoch in range(lastepoch, 4001):
 
     with open('log.txt', 'r+') as f:
         f.write("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
+        print("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
 
     saver.save(sess, checkpoint_dir + 'model.ckpt')
