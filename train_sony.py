@@ -135,8 +135,8 @@ g_loss = np.zeros((5000, 1))
 
 allfolders = glob.glob('./result/sony/*0')
 lastepoch = 0
-for folder in allfolders:
-    lastepoch = np.maximum(lastepoch, int(folder[-4:]))
+#for folder in allfolders:
+#    lastepoch = np.maximum(lastepoch, int(folder[-4:]))
 
 with open('log.txt', 'r+') as f:
     f.write("New training")
@@ -144,8 +144,9 @@ with open('log.txt', 'r+') as f:
 
 learning_rate = 1e-4
 for epoch in range(lastepoch, 4001):
-    if os.path.isdir("./result/sony/%04d" % epoch):
-        continue
+    #if os.path.isdir("./result/sony/%04d" % epoch):
+    #    continue
+    
     cnt = 0
     if epoch > 2000:
         learning_rate = 1e-5
@@ -207,7 +208,7 @@ for epoch in range(lastepoch, 4001):
 
             temp = np.concatenate((gt_patch[0, :, :, :], output[0, :, :, :]), axis=1)
             scipy.misc.toimage(temp * 255, high=255, low=0, cmin=0, cmax=255).save(
-                result_dir + '%04d/%05d_00_train_%d.jpg' % (epoch, train_id, ratio))
+                result_dir + '%04d/%05d_00_train01_%d.jpg' % (epoch, train_id, ratio))
 
     with open('log.txt', 'r+') as f:
         f.write("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
