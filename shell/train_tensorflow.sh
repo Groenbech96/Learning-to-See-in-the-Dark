@@ -60,6 +60,9 @@ pip install virtualenv
 export PYTHONPATH=
 source mlpy2env/bin/activate
 
+# Upgrade pip
+pip install -U pip
+
 # install 
 pip install -r requirements.txt
 
