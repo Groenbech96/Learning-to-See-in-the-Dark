@@ -138,9 +138,9 @@ lastepoch = 0
 #for folder in allfolders:
 #    lastepoch = np.maximum(lastepoch, int(folder[-4:]))
 
-with open('log.txt', 'r+') as f:
-    f.write("New training")
-    print("New training")
+with open('log.txt', 'a') as f:
+    f.write("New training \n")
+    #print("New training")
 
 learning_rate = 1e-4
 for epoch in range(lastepoch, 4001):
@@ -210,8 +210,8 @@ for epoch in range(lastepoch, 4001):
             scipy.misc.toimage(temp * 255, high=255, low=0, cmin=0, cmax=255).save(
                 result_dir + '%04d/%05d_00_train01_%d.jpg' % (epoch, train_id, ratio))
 
-    with open('log.txt', 'a+') as f:
+    with open('log.txt', 'a') as f:
         f.write("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
-        print("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
+        #print("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
 
     saver.save(sess, checkpoint_dir + 'model.ckpt')
