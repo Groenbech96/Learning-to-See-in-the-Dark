@@ -52,7 +52,7 @@ module load cudnn/v7.4.2.24-prod-cuda-9.0
 
 nvidia-smi
 
-/appl/cuda/9.2/samples/bin/x86_64/linux/release/deviceQuery
+/appl/cuda/9.0/samples/bin/x86_64/linux/release/deviceQuery
 
 # Setup virtual env
 pip install virtualenv
