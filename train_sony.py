@@ -138,6 +138,9 @@ lastepoch = 0
 for folder in allfolders:
     lastepoch = np.maximum(lastepoch, int(folder[-4:]))
 
+with open('log.txt', 'r+') as f:
+    f.write("New training")
+
 learning_rate = 1e-4
 for epoch in range(lastepoch, 4001):
     if os.path.isdir("./result/sony/%04d" % epoch):
@@ -145,7 +148,7 @@ for epoch in range(lastepoch, 4001):
     cnt = 0
     if epoch > 2000:
         learning_rate = 1e-5
-
+    st = time.time()
     for ind in np.random.permutation(len(train_ids)):
         # get the path from image id
         train_id = train_ids[ind]
@@ -160,7 +163,7 @@ for epoch in range(lastepoch, 4001):
         gt_exposure = float(gt_fn[9:-5])
         ratio = min(gt_exposure / in_exposure, 300)
 
-        st = time.time()
+        
         cnt += 1
 
         if input_images[str(ratio)[0:3]][ind] is None:
@@ -197,8 +200,6 @@ for epoch in range(lastepoch, 4001):
         output = np.minimum(np.maximum(output, 0), 1)
         g_loss[ind] = G_current
 
-        #print("%d %d Loss=%.3f Time=%.3f" % (epoch, cnt, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
-
         if epoch % save_freq == 0:
             if not os.path.isdir(result_dir + '%04d' % epoch):
                 os.makedirs(result_dir + '%04d' % epoch)
@@ -206,5 +207,8 @@ for epoch in range(lastepoch, 4001):
             temp = np.concatenate((gt_patch[0, :, :, :], output[0, :, :, :]), axis=1)
             scipy.misc.toimage(temp * 255, high=255, low=0, cmin=0, cmax=255).save(
                 result_dir + '%04d/%05d_00_train_%d.jpg' % (epoch, train_id, ratio))
+
+    with open('log.txt', 'r+') as f:
+        f.write("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
 
     saver.save(sess, checkpoint_dir + 'model.ckpt')
