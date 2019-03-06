@@ -4,3 +4,4 @@ scipy
 rawpy
 torch
 tensorflow-gpu
+tensorflow
