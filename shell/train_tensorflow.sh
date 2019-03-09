@@ -60,6 +60,7 @@ pip install virtualenv
 rm -rf mlpy2env
 
 export PYTHONPATH=
+virtualenv mlpy2env
 source mlpy2env/bin/activate
 
 # Upgrade pip
