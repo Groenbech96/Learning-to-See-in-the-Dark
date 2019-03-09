@@ -28,7 +28,7 @@
 #BSUB -W 24:00
 
 # request 20GB of system-memory pr core
-#BSUB -R "rusage[mem=64000]"
+#BSUB -R "rusage[mem=72000]"
 
 ### -- set the email address --
 # please uncomment the following line and put in your e-mail address,
@@ -56,6 +56,8 @@ nvidia-smi
 
 # Setup virtual env
 pip install virtualenv
+
+rm -rf mlpy2env
 
 export PYTHONPATH=
 source mlpy2env/bin/activate

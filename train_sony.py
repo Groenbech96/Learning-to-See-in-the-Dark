@@ -135,17 +135,16 @@ g_loss = np.zeros((5000, 1))
 
 allfolders = glob.glob('./result/sony/*0')
 lastepoch = 0
-#for folder in allfolders:
-#    lastepoch = np.maximum(lastepoch, int(folder[-4:]))
+for folder in allfolders:
+    lastepoch = np.maximum(lastepoch, int(folder[-4:]))
 
 with open('log.txt', 'a') as f:
     f.write("New training \n")
-    #print("New training")
 
 learning_rate = 1e-4
 for epoch in range(lastepoch, 4001):
-    #if os.path.isdir("./result/sony/%04d" % epoch):
-    #    continue
+    if os.path.isdir("./result/sony/%04d" % epoch):
+        continue
     
     cnt = 0
     if epoch > 2000:
@@ -165,7 +164,6 @@ for epoch in range(lastepoch, 4001):
         gt_exposure = float(gt_fn[9:-5])
         ratio = min(gt_exposure / in_exposure, 300)
 
-        
         cnt += 1
 
         if input_images[str(ratio)[0:3]][ind] is None:
@@ -212,6 +210,5 @@ for epoch in range(lastepoch, 4001):
 
     with open('log.txt', 'a') as f:
         f.write("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
-        #print("%d Loss=%.3f Time=%.3f \n" % (epoch, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
 
     saver.save(sess, checkpoint_dir + 'model.ckpt')
